@@ -20,11 +20,9 @@ final class GatewayFactory
     public function make(string $name, array $config): GatewayInterface
     {
         return match ($name) {
-            "xendit" => $this->makeXendit($config),
-            "midtrans" => $this->makeMidtrans($config),
-            default => throw new InvalidArgumentException(
-                "Gateway [$name] is not valid.",
-            ),
+            'xendit' => $this->makeXendit($config),
+            'midtrans' => $this->makeMidtrans($config),
+            default => throw new InvalidArgumentException("Gateway [{$name}] is not valid."),
         };
     }
 
@@ -48,20 +46,17 @@ final class GatewayFactory
      */
     private function makeXendit(array $config): GatewayInterface
     {
-        $secret_key = $config["secret_key"] ?? null;
+        /** @var string|null $secret_key */
+        $secret_key = $config['secret_key'] ?? null;
 
-        if (!is_string($secret_key) || $secret_key === "") {
-            throw new InvalidArgumentException(
-                "Xendit secret_key is required.",
-            );
+        if (!is_string($secret_key) || $secret_key === '') {
+            throw new InvalidArgumentException('Xendit secret_key is required.');
         }
 
         $http = new GuzzleClient();
-        $client = new XenditHttpClient(
-            http: $http,
-            secret_key: $secret_key,
-            base_url: $config["base_url"] ?? null,
-        );
+        /** @var string|null $base_url */
+        $base_url = $config['base_url'] ?? null;
+        $client = new XenditHttpClient(http: $http, secret_key: $secret_key, base_url: $base_url);
 
         return new XenditGateway($client);
     }
@@ -71,19 +66,18 @@ final class GatewayFactory
      */
     private function makeMidtrans(array $config): GatewayInterface
     {
-        $server_key = $config["server_key"] ?? null;
+        /** @var string|null $server_key */
+        $server_key = $config['server_key'] ?? null;
 
-        if (!is_string($server_key) || $server_key === "") {
-            throw new InvalidArgumentException(
-                "Midtrans server_key is required.",
-            );
+        if (!is_string($server_key) || $server_key === '') {
+            throw new InvalidArgumentException('Midtrans server_key is required.');
         }
 
         $http = new GuzzleClient();
         $client = new MidtransHttpClient(
             http: $http,
             server_key: $server_key,
-            is_production: (bool) ($config["is_production"] ?? false),
+            is_production: (bool) ($config['is_production'] ?? false),
         );
 
         return new MidtransGateway($client);

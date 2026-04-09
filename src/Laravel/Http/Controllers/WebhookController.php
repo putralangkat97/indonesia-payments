@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 
 class WebhookController
 {
-    public function __construct(private PaymentManager $manager) {}
+    public function __construct(
+        private PaymentManager $manager,
+    ) {}
 
     public function handle(Request $request, string $gateway): JsonResponse
     {
@@ -30,10 +32,10 @@ class WebhookController
         $result = $this->manager->via($gateway)->handleWebhook($payload);
 
         return new JsonResponse([
-            "success" => true,
-            "gateway" => $result->gateway_name,
-            "payment_id" => $result->payment_id,
-            "status" => $result->status->value,
+            'success' => true,
+            'gateway' => $result->gateway_name,
+            'payment_id' => $result->payment_id,
+            'status' => $result->status->value,
         ]);
     }
 }

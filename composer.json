@@ -23,7 +23,8 @@
     "phpunit/phpunit": "^11.0",
     "illuminate/support": "^13.0",
     "illuminate/http": "^13.0",
-    "illuminate/routing": "^13.0"
+    "illuminate/routing": "^13.0",
+    "carthage-software/mago": "^1.19"
   },
   "extra": {
     "laravel": {
@@ -34,6 +35,17 @@
         "Payment": "Anggit\\IndonesiaPayments\\Laravel\\Facades\\Payment"
       }
     }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "lint": "mago lint",
+    "format": "mago format",
+    "analyze": "mago analyze",
+    "ci": [
+      "@format",
+      "@lint",
+      "@test"
+    ]
   },
   "minimum-stability": "stable",
   "prefer-stable": true

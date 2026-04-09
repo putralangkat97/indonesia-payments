@@ -1,0 +1,41 @@
+php-version = "8.3"
+
+[source]
+paths = ["src", "tests"]
+includes = ["vendor"]
+excludes = ["vendor/**/.git/**"]
+
+[linter]
+excludes = ["vendor/**"]
+
+[linter.rules]
+[linter.rules.excessive-parameter-list]
+enabled = true
+constructor-threshold = 10
+
+[linter.rules.too-many-methods]
+enabled = true
+threshold = 12
+
+[linter.rules.no-literal-password]
+enabled = false
+
+[linter.rules.readable-literal]
+enabled = false
+
+[linter.rules.prefer-static-closure]
+enabled = false
+
+[linter.rules.prefer-arrow-function]
+enabled = false
+
+[linter.rules.literal-named-argument]
+enabled = false
+
+[linter.rules.cyclomatic-complexity]
+enabled = true
+threshold = 25
+
+[analyzer]
+# Exclude tests (PHPUnit mock false positives) and Laravel files (framework helpers)
+excludes = ["tests/**", "src/Laravel/**", "vendor/**"]

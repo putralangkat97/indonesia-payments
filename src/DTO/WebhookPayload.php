@@ -32,21 +32,12 @@ final readonly class WebhookPayload
      * @param string $raw_body
      * @param array<string,mixed> $query
      */
-    public static function fromHttp(
-        string $provider,
-        array $headers,
-        string $raw_body,
-        array $query = [],
-    ): self {
+    public static function fromHttp(string $provider, array $headers, string $raw_body, array $query = []): self
+    {
         /** @var array<string,mixed>|null $json */
-        $json = json_decode($raw_body, true) ?: [];
+        /** @var array<string,mixed> $json */
+        $json = json_decode($raw_body, associative: true) ?? [];
 
-        return new self(
-            provider: $provider,
-            raw_body: $raw_body,
-            headers: $headers,
-            json: $json,
-            query: $query,
-        );
+        return new self(provider: $provider, raw_body: $raw_body, headers: $headers, json: $json, query: $query);
     }
 }

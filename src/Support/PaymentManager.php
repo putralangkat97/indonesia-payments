@@ -24,10 +24,8 @@ final class PaymentManager
 
     public function via(string $name): GatewayInterface
     {
-        if (!isset($this->gateways[$name])) {
-            throw new InvalidArgumentException(
-                "Gateway [$name] is not registered.",
-            );
+        if (!array_key_exists($name, $this->gateways)) {
+            throw new InvalidArgumentException("Gateway [{$name}] is not registered.");
         }
 
         return $this->gateways[$name];

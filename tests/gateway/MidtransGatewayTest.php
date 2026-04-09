@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
 
 class MidtransGatewayTest extends TestCase
 {
-    private MidtransHttpClient&MockObject $client;
+    private MidtransHttpClient|MockObject $client;
     private MidtransGateway $gateway;
     private string $server_key = 'SB-Mid-server-test123';
 

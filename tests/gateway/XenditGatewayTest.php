@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
 
 class XenditGatewayTest extends TestCase
 {
-    private XenditHttpClient&MockObject $client;
+    private XenditHttpClient|MockObject $client;
     private XenditGateway $gateway;
     private string $secret_key = 'xnd_test_secret_key';
 

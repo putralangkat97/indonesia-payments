@@ -7,7 +7,7 @@ namespace Anggit\IndonesiaPayments\DTO;
 /**
  * Representasi generik payload webhook.
  */
-final readonly class WebhookPayload
+final class WebhookPayload
 {
     /**
      * @param string $provider
@@ -17,11 +17,11 @@ final readonly class WebhookPayload
      * @param array<string,mixed> $query
      */
     public function __construct(
-        public string $provider,
-        public string $raw_body,
-        public array $headers,
-        public array $json,
-        public array $query = [],
+        public readonly string $provider,
+        public readonly string $raw_body,
+        public readonly array $headers,
+        public readonly array $json,
+        public readonly array $query = [],
     ) {}
 
     /**

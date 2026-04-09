@@ -6,15 +6,15 @@ namespace Anggit\IndonesiaPayments\DTO;
 
 use Anggit\IndonesiaPayments\Enums\PaymentStatus;
 
-final readonly class RefundResponse
+final class RefundResponse
 {
     /**
      * @param array<string,mixed> $raw
      */
     public function __construct(
-        public string $gateway_name,
-        public string $payment_id,
-        public PaymentStatus $status,
-        public array $raw = [],
+        public readonly string $gateway_name,
+        public readonly string $payment_id,
+        public readonly PaymentStatus $status,
+        public readonly array $raw = [],
     ) {}
 }

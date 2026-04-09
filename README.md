@@ -1,6 +1,6 @@
 # Indonesia Payments
 
-Unified PHP SDK for **Indonesian payment gateways**, with initial focus on **Xendit** and **Midtrans**, and seamless **Laravel 13** integration.
+Unified PHP SDK for **Indonesian payment gateways**, with initial focus on **Xendit** and **Midtrans**, and seamless **Laravel** integration.
 
 This library provides a consistent abstraction for:
 
@@ -33,7 +33,7 @@ The current implementations are **Xendit** and **Midtrans** via direct HTTP clie
   - `PaymentMethod` (`VIRTUAL_ACCOUNT`, `EWALLET`, `CARD`, `QRIS`).
   - `PaymentStatus` (`PENDING`, `PAID`, `FAILED`, `EXPIRED`, `REFUNDED`).
 - `PaymentManager` + `GatewayFactory` for gateway selection.
-- Laravel 13 integration (ServiceProvider + `Payment` Facade).
+- Laravel integration (ServiceProvider + `Payment` Facade).
 - **Mago** linter/formatter configured out of the box.
 
 ---
@@ -46,7 +46,7 @@ composer require anggit/indonesia-payments
 
 Requirements:
 
-- PHP `^8.3` (8.3, 8.4, 8.5).
+- PHP `^8.1` (8.1, 8.2, 8.3, 8.4, 8.5).
 - Composer v2.
 
 This package uses `guzzlehttp/guzzle` for HTTP communication with the payment gateway APIs.
@@ -184,7 +184,7 @@ After this, redirect the user to `$charge->redirect_url`.
 
 ---
 
-## Usage -- Laravel 13
+## Usage -- Laravel
 
 This package defines a ServiceProvider and Facade for Laravel:
 
@@ -352,11 +352,11 @@ Both Xendit and Midtrans gateways support refunds.
 
 ### Requirements
 
-- PHP >= 8.3
+- PHP >= 8.1
 - Composer v2
 - Xendit account (for testing Xendit driver)
 - Midtrans account (for testing Midtrans driver)
-- PHPUnit (dev dependency set to `^11`, compatible with PHP 8.3+)
+- PHPUnit (dev dependency set to `^10 || ^11`)
 
 ### Getting Started
 

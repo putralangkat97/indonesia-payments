@@ -6,20 +6,20 @@ namespace Anggit\IndonesiaPayments\DTO;
 
 use Anggit\IndonesiaPayments\Enums\PaymentMethod;
 
-final readonly class ChargeRequest
+final class ChargeRequest
 {
     /**
      * @param array<string,mixed> $customer
      * @param array<string,mixed> $meta
      */
     public function __construct(
-        public string $order_id,
-        public int $amount,
-        public string $currency,
-        public PaymentMethod $method,
-        public array $customer,
-        public array $meta = [],
-        public ?string $callback_url = null,
-        public ?string $return_url = null,
+        public readonly string $order_id,
+        public readonly int $amount,
+        public readonly string $currency,
+        public readonly PaymentMethod $method,
+        public readonly array $customer,
+        public readonly array $meta = [],
+        public readonly ?string $callback_url = null,
+        public readonly ?string $return_url = null,
     ) {}
 }

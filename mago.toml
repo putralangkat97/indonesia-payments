@@ -15,7 +15,7 @@ constructor-threshold = 10
 
 [linter.rules.too-many-methods]
 enabled = true
-threshold = 12
+threshold = 14
 
 [linter.rules.no-literal-password]
 enabled = false

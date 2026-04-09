@@ -16,6 +16,7 @@ class XenditHttpClient
         private ClientInterface $http,
         private string $secret_key,
         ?string $base_url = null,
+        private ?string $webhook_token = null,
     ) {
         $this->base_url = rtrim($base_url ?? 'https://api.xendit.co', '/');
     }
@@ -47,11 +48,13 @@ class XenditHttpClient
         return $this->request('POST', '/refunds', $payload);
     }
 
-    public function verifyCallbackSignature(string $raw_body, string $header_signature): bool
+    public function verifyCallbackToken(string $header_token): bool
     {
-        $computed = hash_hmac('sha256', $raw_body, $this->secret_key);
+        if ($this->webhook_token === null || $this->webhook_token === '') {
+            return false;
+        }
 
-        return hash_equals(strtolower($computed), strtolower($header_signature));
+        return hash_equals($this->webhook_token, $header_token);
     }
 
     /**

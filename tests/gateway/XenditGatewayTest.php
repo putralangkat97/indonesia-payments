@@ -23,7 +23,7 @@ class XenditGatewayTest extends TestCase
 {
     private XenditHttpClient|MockObject $client;
     private XenditGateway $gateway;
-    private string $secret_key = 'xnd_test_secret_key';
+    private string $webhook_token = 'xnd_test_webhook_verification_token';
 
     protected function setUp(): void
     {
@@ -133,7 +133,7 @@ class XenditGatewayTest extends TestCase
         $this->assertSame(PaymentStatus::PENDING, $response->status);
     }
 
-    public function test_handle_webhook_with_valid_signature(): void
+    public function test_handle_webhook_with_valid_token(): void
     {
         $body = json_encode([
             'id' => 'inv_123',
@@ -141,19 +141,17 @@ class XenditGatewayTest extends TestCase
             'status' => 'PAID',
         ]);
 
-        $signature = hash_hmac('sha256', $body, $this->secret_key);
-
         $payload = new WebhookPayload(
             provider: 'xendit',
             raw_body: $body,
-            headers: ['x-callback-signature' => [$signature]],
+            headers: ['x-callback-token' => [$this->webhook_token]],
             json: json_decode($body, true),
         );
 
         $this->client
             ->expects($this->once())
-            ->method('verifyCallbackSignature')
-            ->with($body, $signature)
+            ->method('verifyCallbackToken')
+            ->with($this->webhook_token)
             ->willReturn(true);
 
         $result = $this->gateway->handleWebhook($payload);
@@ -164,31 +162,56 @@ class XenditGatewayTest extends TestCase
         $this->assertSame(PaymentStatus::PAID, $result->status);
     }
 
-    public function test_handle_webhook_with_invalid_signature_throws(): void
+    public function test_handle_webhook_with_invalid_token_throws(): void
     {
         $body = json_encode(['id' => 'inv_123', 'status' => 'PAID']);
 
         $payload = new WebhookPayload(
             provider: 'xendit',
             raw_body: $body,
-            headers: ['x-callback-signature' => ['invalid']],
+            headers: ['x-callback-token' => ['wrong-token']],
             json: json_decode($body, true),
         );
 
-        $this->client->method('verifyCallbackSignature')->willReturn(false);
+        $this->client->method('verifyCallbackToken')->willReturn(false);
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid Xendit callback signature');
+        $this->expectExceptionMessage('Invalid Xendit callback token');
 
         $this->gateway->handleWebhook($payload);
     }
 
-    public function test_handle_webhook_without_signature_throws(): void
+    public function test_handle_webhook_without_token_throws(): void
     {
         $payload = new WebhookPayload(provider: 'xendit', raw_body: '{}', headers: [], json: []);
 
         $this->expectException(InvalidArgumentException::class);
         $this->gateway->handleWebhook($payload);
+    }
+
+    public function test_settled_status_maps_to_paid(): void
+    {
+        $this->client
+            ->method('getInvoice')
+            ->willReturn([
+                'id' => 'inv_123',
+                'status' => 'SETTLED',
+                'amount' => 100000,
+                'currency' => 'IDR',
+            ]);
+
+        $details = $this->gateway->getPayment('inv_123');
+        $this->assertSame(PaymentStatus::PAID, $details->status);
+    }
+
+    public function test_refund_cancelled_status_maps_to_failed(): void
+    {
+        $request = new RefundRequest(payment_id: 'inv_123', amount: 50000);
+
+        $this->client->method('createRefund')->willReturn(['id' => 'ref_456', 'status' => 'CANCELLED']);
+
+        $response = $this->gateway->refund($request);
+        $this->assertSame(PaymentStatus::FAILED, $response->status);
     }
 
     public function test_map_status_defaults_to_pending(): void

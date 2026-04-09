@@ -22,7 +22,7 @@ The current implementations are **Xendit** and **Midtrans** via direct HTTP clie
   - Create invoice (Payment Link API).
   - Get invoice status.
   - Create refunds.
-  - Webhook handler + signature verification (`X-Callback-Signature`).
+  - Webhook handler + callback token verification (`x-callback-token`).
 - `MidtransGateway` implementation:
   - Create Snap transaction.
   - Get transaction status.
@@ -80,7 +80,7 @@ Main namespace structure:
 
 ### Xendit
 
-You need a **Secret Key** from the Xendit dashboard (Development or Production).
+You need a **Secret Key** and a **Webhook Verification Token** from the Xendit dashboard (Development or Production). The webhook token is found under Settings > Webhooks in the Xendit Dashboard.
 
 ### Midtrans
 
@@ -93,8 +93,9 @@ $config = [
     'default' => 'xendit',
     'gateways' => [
         'xendit' => [
-            'secret_key' => 'xnd_development_XXXXXXXXXXX',
-            'base_url'   => null, // null = https://api.xendit.co
+            'secret_key'    => 'xnd_development_XXXXXXXXXXX',
+            'webhook_token' => 'your-xendit-webhook-verification-token',
+            'base_url'      => null, // null = https://api.xendit.co
         ],
         'midtrans' => [
             'server_key'    => 'SB-Mid-server-XXXXXXXXXXX',
@@ -112,8 +113,9 @@ return [
 
     'gateways' => [
         'xendit' => [
-            'secret_key' => env('XENDIT_SECRET_KEY'),
-            'base_url'   => env('XENDIT_BASE_URL'),
+            'secret_key'    => env('XENDIT_SECRET_KEY'),
+            'webhook_token' => env('XENDIT_WEBHOOK_TOKEN'),
+            'base_url'      => env('XENDIT_BASE_URL'),
         ],
 
         'midtrans' => [
@@ -128,6 +130,7 @@ In your `.env`:
 
 ```env
 XENDIT_SECRET_KEY=xnd_development_XXXXXXXXXXX
+XENDIT_WEBHOOK_TOKEN=your-xendit-webhook-verification-token
 MIDTRANS_SERVER_KEY=SB-Mid-server-XXXXXXXXXXX
 INDOPAY_DEFAULT=xendit
 ```
@@ -214,6 +217,7 @@ INDOPAY_DEFAULT=xendit
 
 # Xendit Configuration
 XENDIT_SECRET_KEY=xnd_development_XXXXXXXXXXX
+XENDIT_WEBHOOK_TOKEN=your-xendit-webhook-verification-token
 XENDIT_BASE_URL=null
 
 # Midtrans Configuration
@@ -489,8 +493,9 @@ Route::post('/webhook/midtrans', [PaymentWebhookController::class, 'midtrans'])
 
 ### Troubleshooting
 
-**Issue: "Invalid signature" in webhooks**
-- Ensure your secret/server key is correct
+**Issue: "Invalid callback token" in Xendit webhooks**
+- Ensure your `XENDIT_WEBHOOK_TOKEN` matches the Webhook Verification Token from the Xendit Dashboard (Settings > Webhooks)
+- The webhook token is separate from the API secret key
 - Check that webhook URL is publicly accessible (use ngrok for local development)
 - Verify the webhook is registered in the payment gateway dashboard
 

@@ -106,7 +106,7 @@ class XenditGateway implements GatewayInterface
 
         $status = match ($result['status'] ?? null) {
             'SUCCEEDED' => PaymentStatus::REFUNDED,
-            'FAILED' => PaymentStatus::FAILED,
+            'FAILED', 'CANCELLED' => PaymentStatus::FAILED,
             default => PaymentStatus::PENDING,
         };
 
@@ -123,10 +123,10 @@ class XenditGateway implements GatewayInterface
         $raw_body = $payload->raw_body;
         $headers = $payload->headers;
 
-        $signature = $headers['x-callback-signature'][0] ?? $headers['X-Signature'][0] ?? null;
+        $token = $headers['x-callback-token'][0] ?? null;
 
-        if (!is_string($signature) || !$this->client->verifyCallbackSignature($raw_body, $signature)) {
-            throw new InvalidArgumentException('Invalid Xendit callback signature');
+        if (!is_string($token) || !$this->client->verifyCallbackToken($token)) {
+            throw new InvalidArgumentException('Invalid Xendit callback token');
         }
 
         $data = $payload->json;
@@ -144,7 +144,7 @@ class XenditGateway implements GatewayInterface
     private function mapStatus(?string $status): PaymentStatus
     {
         return match ($status) {
-            'PAID' => PaymentStatus::PAID,
+            'PAID', 'SETTLED' => PaymentStatus::PAID,
             'PENDING' => PaymentStatus::PENDING,
             'EXPIRED' => PaymentStatus::EXPIRED,
             'FAILED' => PaymentStatus::FAILED,

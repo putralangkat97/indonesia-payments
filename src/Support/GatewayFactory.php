@@ -56,7 +56,14 @@ final class GatewayFactory
         $http = new GuzzleClient();
         /** @var string|null $base_url */
         $base_url = $config['base_url'] ?? null;
-        $client = new XenditHttpClient(http: $http, secret_key: $secret_key, base_url: $base_url);
+        /** @var string|null $webhook_token */
+        $webhook_token = $config['webhook_token'] ?? null;
+        $client = new XenditHttpClient(
+            http: $http,
+            secret_key: $secret_key,
+            base_url: $base_url,
+            webhook_token: $webhook_token,
+        );
 
         return new XenditGateway($client);
     }

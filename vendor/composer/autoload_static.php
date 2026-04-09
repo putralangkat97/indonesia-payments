@@ -27,6 +27,8 @@ class ComposerStaticInitec99c91aaa4ff8d469e7d0d645f35b1e
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
+        '308987240302a64b53a87123efb5e008' => __DIR__ . '/..' . '/carthage-software/mago/composer/functions.php',
+        '6712df3a927b219575eeadea9f5e33c0' => __DIR__ . '/..' . '/carthage-software/mago/composer/internal.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
     );
 

@@ -73,6 +73,65 @@
             "install-path": "../carbonphp/carbon-doctrine-types"
         },
         {
+            "name": "carthage-software/mago",
+            "version": "1.19.0",
+            "version_normalized": "1.19.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/carthage-software/mago.git",
+                "reference": "2282d0b8daeca5eb82e1d01d26f445f8d8a52aed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/carthage-software/mago/zipball/2282d0b8daeca5eb82e1d01d26f445f8d8a52aed",
+                "reference": "2282d0b8daeca5eb82e1d01d26f445f8d8a52aed",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.1 || ~8.2 || ~8.3 || ~8.4 || ~8.5 || ~8.6"
+            },
+            "suggest": {
+                "ext-curl": "To show binary download progress"
+            },
+            "time": "2026-04-08T02:49:52+00:00",
+            "bin": [
+                "composer/bin/mago"
+            ],
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "composer/functions.php",
+                    "composer/internal.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT OR Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Saif Eddin Gmati",
+                    "email": "azjezz@carthage.software"
+                }
+            ],
+            "description": "Mago is a toolchain for PHP that aims to provide a set of tools to help developers write better code.",
+            "keywords": [
+                "dev"
+            ],
+            "support": {
+                "issues": "https://github.com/carthage-software/mago/issues",
+                "source": "https://github.com/carthage-software/mago/tree/1.19.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/azjezz",
+                    "type": "github"
+                }
+            ],
+            "install-path": "../carthage-software/mago"
+        },
+        {
             "name": "doctrine/inflector",
             "version": "2.1.0",
             "version_normalized": "2.1.0.0",
@@ -5637,6 +5696,7 @@
     "dev": true,
     "dev-package-names": [
         "carbonphp/carbon-doctrine-types",
+        "carthage-software/mago",
         "doctrine/inflector",
         "fruitcake/php-cors",
         "guzzlehttp/uri-template",

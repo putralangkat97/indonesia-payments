@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'anggit/indonesia-payments',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => 'c07e32414a59da44ab1fb9290fea19521dd013bd',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'anggit/indonesia-payments' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'c07e32414a59da44ab1fb9290fea19521dd013bd',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -25,6 +25,15 @@
             'reference' => '18ba5ddfec8976260ead6e866180bd5d2f71aa1d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../carbonphp/carbon-doctrine-types',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
+        'carthage-software/mago' => array(
+            'pretty_version' => '1.19.0',
+            'version' => '1.19.0.0',
+            'reference' => '2282d0b8daeca5eb82e1d01d26f445f8d8a52aed',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../carthage-software/mago',
             'aliases' => array(),
             'dev_requirement' => true,
         ),

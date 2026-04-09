@@ -1,1 +1,10 @@
 vendor
+.claude
+.env
+.idea/
+.vscode/
+.phpunit.result.cache
+.phpunit.cache/
+composer.lock
+*.swp
+*.swo

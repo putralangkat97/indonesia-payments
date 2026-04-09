@@ -350,6 +350,24 @@ Both Xendit and Midtrans gateways support refunds.
 
 ## Development
 
+### Requirements
+
+- PHP >= 8.3
+- Composer v2
+- Xendit account (for testing Xendit driver)
+- Midtrans account (for testing Midtrans driver)
+- PHPUnit (dev dependency set to `^11`, compatible with PHP 8.3+)
+
+### Getting Started
+
+Clone the repo:
+
+```bash
+git clone https://github.com/putralangkat97/indonesia-payments.git
+cd indonesia-payments
+composer install
+```
+
 ### Available Scripts
 
 | Command | Description |
@@ -360,12 +378,114 @@ Both Xendit and Midtrans gateways support refunds.
 | `composer analyze` | Static analysis with Mago |
 | `composer ci` | Full pipeline: format + lint + test |
 
-### Running Tests
+Run tests:
 
 ```bash
-composer install
 composer test
 ```
+
+Or directly:
+
+```bash
+./vendor/bin/phpunit
+```
+
+### Directory Structure
+
+```text
+src/
+  Contracts/          # GatewayInterface
+  DTO/                # ChargeRequest, ChargeResponse, PaymentDetails,
+                      # RefundRequest, RefundResponse, WebhookPayload, WebhookResult
+  Enums/              # PaymentMethod, PaymentStatus
+  Exceptions/         # GatewayException, NotSupportedException
+  Gateways/           # XenditGateway, MidtransGateway
+  Support/
+    Http/             # XenditHttpClient, MidtransHttpClient
+    GatewayFactory.php
+    PaymentManager.php
+  Laravel/
+    config/           # indopay.php
+    Facades/          # Payment.php
+    Http/Controllers/ # WebhookController.php
+    IndoPayServiceProvider.php
+    routes.php
+tests/
+  gateway/            # XenditGatewayTest, MidtransGatewayTest
+```
+
+### Code Conventions
+
+- Strict types: `declare(strict_types=1);` in every file.
+- `final readonly` for DTOs.
+- Enums for payment status/method instead of magic strings.
+- **snake_case** for all variables.
+- PascalCase namespaces following PSR-4.
+- Mago formatter/linter enforced via `composer ci`.
+
+### Manual Playground
+
+Create a `playground.php` file at the project root:
+
+```php
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Anggit\IndonesiaPayments\Support\GatewayFactory;
+use Anggit\IndonesiaPayments\Support\PaymentManager;
+use Anggit\IndonesiaPayments\DTO\ChargeRequest;
+use Anggit\IndonesiaPayments\Enums\PaymentMethod;
+
+$config = [
+    'default' => 'xendit',
+    'gateways' => [
+        'xendit' => [
+            'secret_key' => 'xnd_development_XXXXXXXXXXX',
+            'base_url'   => null,
+        ],
+    ],
+];
+
+$factory  = new GatewayFactory();
+$gateways = $factory->makeAll($config['gateways']);
+$manager  = new PaymentManager($gateways, $config['default']);
+
+$charge = $manager->via('xendit')->charge(
+    new ChargeRequest(
+        order_id: 'INV-' . time(),
+        amount:   100_000,
+        currency: 'IDR',
+        method:   PaymentMethod::EWALLET,
+        customer: [
+            'email' => 'user@example.com',
+            'name'  => 'Example User',
+        ],
+    )
+);
+
+var_dump($charge);
+```
+
+Then run:
+
+```bash
+php playground.php
+```
+
+---
+
+## Adding a New Driver
+
+The pattern for adding a new driver (e.g. **DOKU**) is:
+
+1. Add an **HTTP client** in `src/Support/Http/DokuHttpClient.php`
+2. Add a **Gateway** in `src/Gateways/DokuGateway.php` implementing `GatewayInterface`
+3. Wire it in `GatewayFactory::make()` with a new match case
+4. Add configuration in `src/Laravel/config/indopay.php`
+5. Add tests in `tests/gateway/DokuGatewayTest.php`
+
+See the existing `XenditGateway` and `MidtransGateway` implementations as reference.
 
 ---
 

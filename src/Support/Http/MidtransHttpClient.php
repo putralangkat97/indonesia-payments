@@ -17,7 +17,9 @@ class MidtransHttpClient
         private string $server_key,
         bool $is_production = false,
     ) {
-        $this->base_url = $is_production ? 'https://app.midtrans.com' : 'https://app.sandbox.midtrans.com';
+        $this->base_url = $is_production
+            ? "https://app.midtrans.com"
+            : "https://app.sandbox.midtrans.com";
     }
 
     /**
@@ -26,7 +28,7 @@ class MidtransHttpClient
      */
     public function createSnapTransaction(array $payload): array
     {
-        return $this->request('POST', '/snap/v1/transactions', $payload);
+        return $this->request("POST", "/snap/v1/transactions", $payload);
     }
 
     /**
@@ -34,7 +36,11 @@ class MidtransHttpClient
      */
     public function getTransactionStatus(string $order_id): array
     {
-        return $this->request('GET', "/v2/{$order_id}/status", base_url: $this->getApiBaseUrl());
+        return $this->request(
+            "GET",
+            "/v2/{$order_id}/status",
+            base_url: $this->getApiBaseUrl(),
+        );
     }
 
     /**
@@ -43,7 +49,12 @@ class MidtransHttpClient
      */
     public function createRefund(string $order_id, array $payload): array
     {
-        return $this->request('POST', "/v2/{$order_id}/refund", $payload, base_url: $this->getApiBaseUrl());
+        return $this->request(
+            "POST",
+            "/v2/{$order_id}/refund",
+            $payload,
+            base_url: $this->getApiBaseUrl(),
+        );
     }
 
     public function verifySignature(
@@ -53,36 +64,40 @@ class MidtransHttpClient
         string $signature,
     ): bool {
         $input = $order_id . $status_code . $gross_amount . $this->server_key;
-        $computed = hash('sha512', $input);
+        $computed = hash("sha512", $input);
 
         return hash_equals($computed, $signature);
     }
 
     private function getApiBaseUrl(): string
     {
-        return str_contains($this->base_url, 'sandbox')
-            ? 'https://api.sandbox.midtrans.com'
-            : 'https://api.midtrans.com';
+        return str_contains($this->base_url, "sandbox")
+            ? "https://api.sandbox.midtrans.com"
+            : "https://api.midtrans.com";
     }
 
     /**
      * @param array<string, mixed>|null $json
      * @return array<string, mixed>
      */
-    private function request(string $method, string $uri, ?array $json = null, ?string $base_url = null): array
-    {
-        $auth_header = base64_encode($this->server_key . ':');
+    private function request(
+        string $method,
+        string $uri,
+        ?array $json = null,
+        ?string $base_url = null,
+    ): array {
+        $auth_header = base64_encode($this->server_key . ":");
 
         $options = [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'Authorization' => "Basic {$auth_header}",
+            "headers" => [
+                "Content-Type" => "application/json",
+                "Accept" => "application/json",
+                "Authorization" => "Basic {$auth_header}",
             ],
         ];
 
         if ($json !== null) {
-            $options['json'] = $json;
+            $options["json"] = $json;
         }
 
         $url = ($base_url ?? $this->base_url) . $uri;
@@ -90,7 +105,11 @@ class MidtransHttpClient
         try {
             $response = $this->http->request($method, $url, $options);
         } catch (GuzzleException $e) {
-            throw new RuntimeException('Midtrans API request failed: ' . $e->getMessage(), 0, $e);
+            throw new RuntimeException(
+                "Midtrans API request failed: " . $e->getMessage(),
+                0,
+                $e,
+            );
         }
 
         $body = (string) $response->getBody();
@@ -99,7 +118,7 @@ class MidtransHttpClient
         $data = json_decode($body, associative: true);
 
         if (!is_array($data)) {
-            throw new RuntimeException('Invalid JSON response from Midtrans');
+            throw new RuntimeException("Invalid JSON response from Midtrans");
         }
 
         return $data;

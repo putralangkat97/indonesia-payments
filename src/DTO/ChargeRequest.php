@@ -14,7 +14,7 @@ final class ChargeRequest
      */
     public function __construct(
         public readonly string $order_id,
-        public readonly int $amount,
+        public readonly float $amount,
         public readonly string $currency,
         public readonly PaymentMethod $method,
         public readonly array $customer,

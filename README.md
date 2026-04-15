@@ -168,7 +168,7 @@ $manager  = new PaymentManager($gateways, $config['default']);
 $charge = $manager->via('xendit')->charge(
     new ChargeRequest(
         order_id: 'INV-' . time(),
-        amount:   200_000,
+        amount:   (float) 200_000,
         currency: 'IDR',
         method:   PaymentMethod::EWALLET,
         customer: [
@@ -260,7 +260,7 @@ class CheckoutController extends Controller
         $charge = \Payment::charge(
             new ChargeRequest(
                 order_id: 'INV-' . now()->timestamp,
-                amount:   200_000,
+                amount: (float) 200_000,
                 currency: 'IDR',
                 method:   PaymentMethod::EWALLET,
                 customer: [
@@ -279,7 +279,7 @@ class CheckoutController extends Controller
         $charge = \Payment::via('midtrans')->charge(
             new ChargeRequest(
                 order_id: 'INV-' . now()->timestamp,
-                amount:   200_000,
+                amount: (float) 200_000,
                 currency: 'IDR',
                 method:   PaymentMethod::VIRTUAL_ACCOUNT,
                 customer: [
@@ -540,7 +540,7 @@ class TestPaymentGateway extends Command
             $charge = \Payment::via($gateway)->charge(
                 new ChargeRequest(
                     order_id: 'TEST-' . time(),
-                    amount:   10000,
+                    amount: (float) 10000,
                     currency: 'IDR',
                     method:   PaymentMethod::EWALLET,
                     customer: [
@@ -777,7 +777,7 @@ $manager  = new PaymentManager($gateways, $config['default']);
 $charge = $manager->via('xendit')->charge(
     new ChargeRequest(
         order_id: 'INV-' . time(),
-        amount:   100_000,
+        amount: (float) 100_000,
         currency: 'IDR',
         method:   PaymentMethod::EWALLET,
         customer: [
